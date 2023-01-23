@@ -5,104 +5,66 @@ import {
   useAnimation,
   useAnimationControls,
 } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function App() {
   let [open, setOpen] = useState(false);
   let controls = useAnimationControls();
 
-  // async function handleClick() {
-  function handleOpen(o) {
-    setOpen(o);
-    // controls.set("closed");
-    setTimeout(() => {
-      controls.start("open");
-    }, 10);
-    // controls.set({ opacity: 0 });
-    // controls.start({ opacity: 1, transition: { duration: 3 } });
-  }
+  useEffect(() => {
+    if (open) {
+      console.log("opening");
 
-  async function handleClick() {
-    //   setOpen(false);
-    //   console.log("hi");
-    // exit={{
-    //   opacity: 0,
-    //   transition: {
-    //     ease: "easeIn",
-    //     duration: 0.05,
-    //   },
-    // }}
+      controls.start("open");
+    }
+  }, [open, controls]);
+
+  async function closeMenu() {
+    await controls.start("closed");
+    setOpen(false);
   }
 
   return (
     <div className="flex items-center justify-center min-h-full">
       <div className="max-w-sm mx-auto bg-white shadow p-8 rounded w-full">
-        <DropdownMenu.Root open={open} onOpenChange={handleOpen}>
-          <DropdownMenu.Trigger className="bg-gray-200 px-3 py-1 rounded">
+        <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+          <DropdownMenu.Trigger className="bg-gray-200 px-3 py-1 rounded select-none">
             Menu
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal forceMount={true}>
-            {open && (
-              <DropdownMenu.Content align="start" asChild forceMount>
-                <motion.div
-                  initial="closed"
-                  animate={controls}
-                  variants={{
-                    open: {
-                      opacity: 1,
-                      transition: {
-                        ease: "easeOut",
-                        // duration: 0.1,
-                        duration: 1,
+            <AnimatePresence>
+              {open && (
+                <DropdownMenu.Content align="start" asChild forceMount>
+                  <motion.div
+                    initial="closed"
+                    animate={controls}
+                    exit="closed"
+                    variants={{
+                      open: {
+                        opacity: 1,
+                        transition: {
+                          ease: "easeOut",
+                          duration: 0.1,
+                        },
                       },
-                    },
-                    closed: {
-                      opacity: 0,
-                      transition: {
-                        ease: "easeIn",
-                        // duration: 0.05,
-                        duration: 2,
+                      closed: {
+                        opacity: 0,
+                        transition: {
+                          ease: "easeIn",
+                          duration: 0.15,
+                        },
                       },
-                    },
-                  }}
-                  // exit={{
-                  //   opacity: 0,
-                  //   transition: {
-                  //     ease: "easeIn",
-                  //     duration: 0.05,
-                  //   },
-                  // }}
-                  className="bg-gray-100 rounded text-left"
-                >
-                  <Item
-                    onClick={handleClick}
-                    // onClick={() => {
-                    //   setOpen(false);
-                    //   console.log("hi");
-                    // }}
-                  >
-                    Item 1
-                  </Item>
-                  <Item
-                    onClick={() => {
-                      setOpen(false);
-                      console.log("hi");
                     }}
+                    className="bg-gray-100 rounded text-left p-1.5 shadow-sm mt-2 border border-gray-300"
                   >
-                    Item 2
-                  </Item>
-                  <Item
-                    onClick={() => {
-                      setOpen(false);
-                      console.log("hi");
-                    }}
-                  >
-                    Item 3
-                  </Item>
-                </motion.div>
-              </DropdownMenu.Content>
-            )}
+                    <Item closeMenu={closeMenu}>Item 1</Item>
+                    <Item closeMenu={closeMenu}>Item 2</Item>
+                    <Item closeMenu={closeMenu}>Item 3</Item>
+                  </motion.div>
+                </DropdownMenu.Content>
+              )}
+            </AnimatePresence>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
@@ -115,10 +77,12 @@ const sleep = (s: number) =>
 
 function Item({
   children,
-  onClick,
+  closeMenu,
+  onClick = () => {},
 }: {
   children: React.ReactNode;
-  onClick: () => void;
+  closeMenu: () => void;
+  onClick?: () => void;
 }) {
   let controls = useAnimationControls();
 
@@ -130,23 +94,18 @@ function Item({
         await controls.start({
           backgroundColor: "#f3f4f6",
           color: "rgb(28, 25, 23)",
-          transition: { duration: 0.05 },
+          transition: { duration: 0.06 },
         });
         await controls.start({
-          backgroundColor: "#3b82f6",
+          backgroundColor: "rgb(14,165,233)",
           color: "rgb(255,255,255)",
-          transition: { duration: 0.05 },
+          transition: { duration: 0.06 },
         });
-        await sleep(0.1);
-        await controls.start({
-          backgroundColor: "#f3f4f6",
-          color: "rgb(28, 25, 23)",
-          transition: { duration: 0.05 },
-        });
+        await sleep(0.05);
+        await closeMenu();
         onClick();
-        // setOpen(false);
       }}
-      className="w-40 px-2 py-2 data-[highlighted]:bg-blue-500 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none cursor-pointer"
+      className="w-40 px-2 py-2 data-[highlighted]:bg-sky-500 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none cursor-pointer rounded"
     >
       <motion.div animate={controls}>{children}</motion.div>
     </DropdownMenu.Item>
