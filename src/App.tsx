@@ -29,9 +29,9 @@ export default function App() {
             Menu
           </DropdownMenu.Trigger>
 
-          <DropdownMenu.Portal forceMount>
-            <AnimatePresence>
-              {open && (
+          <AnimatePresence>
+            {open && (
+              <DropdownMenu.Portal forceMount>
                 <DropdownMenu.Content asChild>
                   <motion.div
                     initial="closed"
@@ -42,6 +42,7 @@ export default function App() {
                         opacity: 1,
                         transition: {
                           ease: "easeOut",
+                          // duration: 1,
                           duration: 0.1,
                         },
                       },
@@ -70,9 +71,9 @@ export default function App() {
                     <Item closeMenu={closeMenu}>Item 3</Item>
                   </motion.div>
                 </DropdownMenu.Content>
-              )}
-            </AnimatePresence>
-          </DropdownMenu.Portal>
+              </DropdownMenu.Portal>
+            )}
+          </AnimatePresence>
         </DropdownMenu.Root>
       </div>
     </div>
