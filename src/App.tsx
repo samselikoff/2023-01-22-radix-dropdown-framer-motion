@@ -1,20 +1,14 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import {
-  AnimatePresence,
-  motion,
-  useAnimation,
-  useAnimationControls,
-} from "framer-motion";
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
 export default function App() {
   let [open, setOpen] = useState(false);
+  let [foo, setFoo] = useState("");
   let controls = useAnimationControls();
 
   useEffect(() => {
     if (open) {
-      console.log("opening");
-
       controls.start("open");
     }
   }, [open, controls]);
@@ -27,15 +21,18 @@ export default function App() {
   return (
     <div className="flex items-center justify-center min-h-full">
       <div className="max-w-sm mx-auto bg-white shadow p-8 rounded w-full">
+        <div className="mb-8">
+          <p>Foo is {foo}</p>
+        </div>
         <DropdownMenu.Root open={open} onOpenChange={setOpen}>
           <DropdownMenu.Trigger className="bg-gray-200 px-3 py-1 rounded select-none">
             Menu
           </DropdownMenu.Trigger>
 
-          <DropdownMenu.Portal forceMount={true}>
+          <DropdownMenu.Portal forceMount>
             <AnimatePresence>
               {open && (
-                <DropdownMenu.Content align="start" asChild forceMount>
+                <DropdownMenu.Content asChild>
                   <motion.div
                     initial="closed"
                     animate={controls}
@@ -58,8 +55,18 @@ export default function App() {
                     }}
                     className="bg-gray-100 rounded text-left p-1.5 shadow-sm mt-2 border border-gray-300"
                   >
-                    <Item closeMenu={closeMenu}>Item 1</Item>
-                    <Item closeMenu={closeMenu}>Item 2</Item>
+                    <Item
+                      onClick={() => setFoo("item 1")}
+                      closeMenu={closeMenu}
+                    >
+                      Item 1
+                    </Item>
+                    <Item
+                      onClick={() => setFoo("Item 2")}
+                      closeMenu={closeMenu}
+                    >
+                      Item 2
+                    </Item>
                     <Item closeMenu={closeMenu}>Item 3</Item>
                   </motion.div>
                 </DropdownMenu.Content>
