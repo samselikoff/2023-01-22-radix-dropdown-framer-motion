@@ -1,6 +1,6 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 export default function App() {
   let [open, setOpen] = useState(false);
@@ -91,7 +91,7 @@ function Item({
   onClick = () => {},
   closeMenu,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onClick?: () => void;
   closeMenu: () => void;
 }) {
