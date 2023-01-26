@@ -8,7 +8,7 @@ const DropdownContext = createContext<{ closeMenu: () => void }>({
 
 export default function App() {
   let [open, setOpen] = useState(false);
-  let [foo, setFoo] = useState("");
+  let [foo, setFoo] = useState("Select an item");
   let controls = useAnimationControls();
 
   useEffect(() => {
@@ -24,10 +24,10 @@ export default function App() {
 
   return (
     <div className="flex items-center justify-center min-h-full">
-      <div className="max-w-sm mx-auto bg-white shadow rounded overflow-hidden w-full">
-        <header className="bg-gray-100 p-2">
+      <div className="max-w-sm mx-auto bg-white border border-gray-300 rounded-md overflow-hidden w-full">
+        <header className="border-b border-gray-100 p-2">
           <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-            <DropdownMenu.Trigger className="px-3 py-1 rounded select-none data-[state=open]:bg-gray-200 focus-visible:outline-none hover:bg-gray-200">
+            <DropdownMenu.Trigger className="px-4 py-1 rounded select-none data-[state=open]:bg-gray-200/75 focus-visible:outline-none hover:bg-gray-200/50 cursor-default">
               File
             </DropdownMenu.Trigger>
 
@@ -45,22 +45,25 @@ export default function App() {
                             opacity: 1,
                             transition: {
                               ease: "easeOut",
-                              // duration: 0.1,
-                              duration: 0,
+                              duration: 0.1,
                             },
                           },
                           closed: {
                             opacity: 0,
                             transition: {
                               ease: "easeIn",
-                              duration: 0.15,
+                              duration: 0.1,
                             },
                           },
                         }}
-                        className="bg-gray-100 rounded text-left p-1.5 shadow-xl mt-2 border border-gray-300"
+                        className="bg-white/50 backdrop-blur rounded text-left p-2 shadow mt-1"
                       >
-                        <Item onClick={() => setFoo("item 1")}>Item 1</Item>
-                        <Item onClick={() => setFoo("Item 2")}>Item 2</Item>
+                        <Item onClick={() => setFoo("Clicked Item 1")}>
+                          Item 1
+                        </Item>
+                        <Item onClick={() => setFoo("Clicked Item 2")}>
+                          Item 2
+                        </Item>
                         <Item onClick={() => alert("hi")}>Item 3</Item>
                       </motion.div>
                     </DropdownMenu.Content>
@@ -71,7 +74,7 @@ export default function App() {
           </DropdownMenu.Root>
         </header>
         <div className="px-4 py-8">
-          <p>Last clicked item: {foo}</p>
+          <p>{foo}</p>
         </div>
       </div>
     </div>
@@ -97,22 +100,26 @@ function Item({
       onSelect={async (e) => {
         e.preventDefault();
         await controls.start({
-          backgroundColor: "#f3f4f6",
-          color: "rgb(28, 25, 23)",
-          transition: { duration: 0.06 },
+          backgroundColor: white,
+          color: gray500,
+          transition: { duration: 0.04 },
         });
         await controls.start({
-          backgroundColor: "rgb(14,165,233)",
-          color: "rgb(255,255,255)",
-          transition: { duration: 0.06 },
+          backgroundColor: sky400,
+          color: white,
+          transition: { duration: 0.04 },
         });
-        await sleep(0.05);
+        await sleep(0.075);
         await closeMenu();
         onClick();
       }}
-      className="w-40 px-2 py-2 data-[highlighted]:bg-sky-500 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none cursor-pointer rounded"
+      className="w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded"
     >
       <motion.div animate={controls}>{children}</motion.div>
     </DropdownMenu.Item>
   );
 }
+
+let gray500 = `#71717a`;
+let white = `#ffffff`;
+let sky400 = "#38bdf8";
