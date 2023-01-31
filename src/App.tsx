@@ -108,13 +108,16 @@ function Item({
         e.preventDefault();
         await controls.start({
           backgroundColor: "rgb(56 189 248 / 0)",
-          color: "var(--gray-700)",
+          // backgroundColor: "var(--sky-400) / 0)",
+          // color: "rgb(64 64 64 / 1)",
+          color: "rgb(var(--gray-700) / 1)",
           transition: { duration: 0.05 },
         });
         await controls.start({
-          // backgroundColor: "var(--sky-400)",
           backgroundColor: "rgb(56 189 248 / 1)",
-          color: "var(--white)",
+          // backgroundColor: "rgb(var(--sky-400) / 1)",
+          color: "rgb(255 255 255 / 1)",
+          // color: "rgb(var(--white) / 1)",
           transition: { duration: 0.05 },
         });
         await sleep(0.075);
@@ -126,6 +129,7 @@ function Item({
       <motion.div
         animate={controls}
         className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded cursor-default"
+        // className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-[rgb(var(--sky-400)_/_1)] data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded cursor-default"
       >
         {children}
       </motion.div>
