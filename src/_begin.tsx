@@ -18,14 +18,14 @@ export default function App() {
                 align="start"
                 className="bg-white/50 backdrop-blur rounded text-left p-2 shadow mt-1"
               >
-                <Item onClick={() => setText("Clicked Item 1")}>Item 1</Item>
-                <Item onClick={() => setText("Clicked Item 2")}>Item 2</Item>
-                <Item onClick={() => alert("hi")}>Item 3</Item>
+                <Item onSelect={() => setText("Clicked Item 1")}>Item 1</Item>
+                <Item onSelect={() => setText("Clicked Item 2")}>Item 2</Item>
+                <Item onSelect={() => alert("hi")}>Item 3</Item>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
         </header>
-        <div className="px-6 py-8">
+        <div className="px-6 py-8 text-right">
           <p>{text}</p>
         </div>
       </div>
@@ -35,14 +35,14 @@ export default function App() {
 
 function Item({
   children,
-  onClick = () => {},
+  onSelect = () => {},
 }: {
   children: ReactNode;
-  onClick?: () => void;
+  onSelect?: () => void;
 }) {
   return (
     <DropdownMenu.Item
-      onSelect={onClick}
+      onSelect={onSelect}
       className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded"
     >
       {children}
