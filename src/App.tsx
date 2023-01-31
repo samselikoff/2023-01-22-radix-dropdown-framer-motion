@@ -7,23 +7,24 @@ export default function App() {
   let [open, setOpen] = useState(false);
   let controls = useAnimationControls();
 
-  function closeMenu() {
+  async function closeMenu() {
+    await controls.start("closed");
     setOpen(false);
   }
 
   useEffect(() => {
     if (open) {
-      controls.start({ opacity: 1 });
+      controls.start("open");
     }
-  }, []);
+  }, [controls, open]);
 
   return (
     <div className="flex items-center justify-center min-h-full">
-      <div className="max-w-sm mx-auto bg-white border border-gray-300 rounded-md overflow-hidden w-full">
+      <div className="max-w-sm mx-auto bg-white border-gray-300 rounded-md overflow-hidden w-full">
         <header className="border-b border-gray-100 p-2">
           <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-            <DropdownMenu.Trigger className="px-4 py-1 rounded select-none data-[state=open]:bg-gray-200/75 focus-visible:outline-none hover:bg-gray-200/50 cursor-default">
-              File
+            <DropdownMenu.Trigger className="px-4 rounded select-none data-[state=open]:bg-gray-200/75 focus-visible:outline-none hover:bg-gray-200/50 cursor-default text-2xl">
+              
             </DropdownMenu.Trigger>
 
             <AnimatePresence>
@@ -35,9 +36,25 @@ export default function App() {
                     asChild
                   >
                     <motion.div
-                      initial={{ opacity: 0 }}
+                      initial="closed"
                       animate={controls}
-                      exit={{ opacity: 0 }}
+                      exit="closed"
+                      variants={{
+                        open: {
+                          opacity: 1,
+                          transition: {
+                            ease: "easeOut",
+                            duration: 0.1,
+                          },
+                        },
+                        closed: {
+                          opacity: 0,
+                          transition: {
+                            ease: "easeIn",
+                            duration: 0.2,
+                          },
+                        },
+                      }}
                     >
                       <div className="p-2">
                         <Item
@@ -54,7 +71,7 @@ export default function App() {
                         </Item>
                         <Item
                           closeMenu={closeMenu}
-                          onSelect={() => alert("hi")}
+                          onSelect={() => alert(";)")}
                         >
                           Item 3
                         </Item>
@@ -90,26 +107,31 @@ function Item({
       onSelect={async (e) => {
         e.preventDefault();
         await controls.start({
-          backgroundColor: "var(--white)",
+          backgroundColor: "rgb(56 189 248 / 0)",
           color: "var(--gray-700)",
-          transition: { duration: 0.1 },
+          transition: { duration: 0.05 },
         });
         await controls.start({
-          backgroundColor: "var(--sky-400)",
+          // backgroundColor: "var(--sky-400)",
+          backgroundColor: "rgb(56 189 248 / 1)",
           color: "var(--white)",
-          transition: { duration: 0.1 },
+          transition: { duration: 0.05 },
         });
-        closeMenu();
+        await sleep(0.075);
+        await closeMenu();
         onSelect();
       }}
       asChild
     >
       <motion.div
         animate={controls}
-        className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded"
+        className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded cursor-default"
       >
         {children}
       </motion.div>
     </DropdownMenu.Item>
   );
 }
+
+const sleep = (s: number) =>
+  new Promise((resolve) => setTimeout(resolve, s * 1000));

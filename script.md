@@ -151,6 +151,88 @@ Doesn't work. Problem is can't run animation until after menu mounts.
 
 Instead, we can leave open and onOpenChange, and use an effect to kick off our mount animation.
 
+```jsx
+useEffect(() => {
+  if (open) {
+    controls.start({ opacity: 1 });
+  }
+}, [controls, open]);
+```
+
+Cool! Menu is opening, and we still have initial and exit working for us to take care of initial state and the exit animation.
+
+Now that we've refactored our menu to use animation controls, we can make our closeMenu function async.
+
+```jsx
+async function closeMenu() {
+  await controls.start({ opacity: 0 });
+  setOpen(false);
+}
+```
+
+and await it in our Item
+
+```
+await closeMenu();
+```
+
+Check it out. All three menu items work!
+
+Now for the fun part: refactoring + tweaking these transitions.
+
+First we have some animation code up here and ssome down here, let's refactor to variants.
+
+```jsx
+<motion.div
+  initial="closed"
+  animate={controls}
+  exit="closed"
+  variants={{
+    open: { opacity: 1 },
+    closed: { opacity: 0 },
+  }}
+>
+
+async function closeMenu() {
+  await controls.start("closed");
+  setOpen(false);
+}
+```
+
+Next some easing and timing
+
+```jsx
+variants={{
+  open: {
+    opacity: 1,
+    transition: {
+      ease: "easeOut",
+      duration: 0.1,
+    },
+  },
+  closed: {
+    opacity: 0,
+    transition: {
+      ease: "easeIn",
+      duration: 0.2,
+    },
+  },
+}}
+```
+
+Next come down to item.
+
+```jsx
+const sleep = (s: number) =>
+  new Promise((resolve) => setTimeout(resolve, s * 1000));
+```
+
+Duration .04, await sleep
+
+```jsx
+await sleep(0.075);
+```
+
 ## Diff
 
 ```diff
