@@ -5,22 +5,22 @@ export default function App() {
   let [text, setText] = useState("Select an item");
 
   return (
-    <div className="flex items-center justify-center min-h-full">
-      <div className="max-w-sm mx-auto bg-white border border-gray-300 rounded-md overflow-hidden w-full">
+    <div className="flex min-h-full items-center justify-center">
+      <div className="mx-auto w-full max-w-sm overflow-hidden rounded-md border border-gray-300 bg-white">
         <header className="border-b border-gray-100 p-2">
           <DropdownMenu.Root>
-            <DropdownMenu.Trigger className="px-4 py-1 rounded select-none data-[state=open]:bg-gray-200/75 focus-visible:outline-none hover:bg-gray-200/50 cursor-default">
-              File
+            <DropdownMenu.Trigger className="cursor-default select-none rounded px-4 text-2xl hover:bg-gray-200/50 focus-visible:outline-none data-[state=open]:bg-gray-200/75">
+              
             </DropdownMenu.Trigger>
 
             <DropdownMenu.Portal>
               <DropdownMenu.Content
                 align="start"
-                className="bg-white/50 backdrop-blur rounded text-left p-2 shadow mt-1"
+                className="mt-1 overflow-hidden rounded bg-white/75 p-2 text-left shadow backdrop-blur"
               >
                 <Item onSelect={() => setText("Clicked Item 1")}>Item 1</Item>
                 <Item onSelect={() => setText("Clicked Item 2")}>Item 2</Item>
-                <Item onSelect={() => alert("hi")}>Item 3</Item>
+                <Item onSelect={() => alert(";)")}>Item 3</Item>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
@@ -43,7 +43,7 @@ function Item({
   return (
     <DropdownMenu.Item
       onSelect={onSelect}
-      className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded"
+      className="w-40 select-none rounded px-2 py-1.5 text-gray-700 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none"
     >
       {children}
     </DropdownMenu.Item>

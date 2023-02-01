@@ -1,36 +1,41 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
+import colors from "tailwindcss/colors";
 
 export default function App() {
-  let [open, setOpen] = useState(false);
   let [text, setText] = useState("Select an item");
+  let [open, setOpen] = useState(false);
   let controls = useAnimationControls();
-
-  useEffect(() => {
-    if (open) {
-      controls.start("open");
-    }
-  }, [open, controls]);
 
   async function closeMenu() {
     await controls.start("closed");
     setOpen(false);
   }
 
+  useEffect(() => {
+    if (open) {
+      controls.start("open");
+    }
+  }, [controls, open]);
+
   return (
-    <div className="flex items-center justify-center min-h-full">
-      <div className="max-w-sm mx-auto bg-white border border-gray-300 rounded-md overflow-hidden w-full">
+    <div className="flex min-h-full items-center justify-center">
+      <div className="mx-auto w-full max-w-sm overflow-hidden rounded-md border-gray-300 bg-white">
         <header className="border-b border-gray-100 p-2">
           <DropdownMenu.Root open={open} onOpenChange={setOpen}>
-            <DropdownMenu.Trigger className="px-4 py-1 rounded select-none data-[state=open]:bg-gray-200/75 focus-visible:outline-none hover:bg-gray-200/50 cursor-default">
-              File
+            <DropdownMenu.Trigger className="cursor-default select-none rounded px-4 text-2xl hover:bg-gray-200/50 focus-visible:outline-none data-[state=open]:bg-gray-200/75">
+              
             </DropdownMenu.Trigger>
 
             <AnimatePresence>
               {open && (
                 <DropdownMenu.Portal forceMount>
-                  <DropdownMenu.Content align="start" asChild>
+                  <DropdownMenu.Content
+                    align="start"
+                    className="mt-1 overflow-hidden rounded bg-white/75 text-left shadow backdrop-blur"
+                    asChild
+                  >
                     <motion.div
                       initial="closed"
                       animate={controls}
@@ -47,27 +52,31 @@ export default function App() {
                           opacity: 0,
                           transition: {
                             ease: "easeIn",
-                            duration: 0.1,
+                            duration: 0.2,
                           },
                         },
                       }}
-                      className="bg-white/50 backdrop-blur rounded text-left p-2 shadow mt-1"
                     >
-                      <Item
-                        onClick={() => setText("Clicked Item 1")}
-                        closeMenu={closeMenu}
-                      >
-                        Item 1
-                      </Item>
-                      <Item
-                        onClick={() => setText("Clicked Item 2")}
-                        closeMenu={closeMenu}
-                      >
-                        Item 2
-                      </Item>
-                      <Item onClick={() => alert("hi")} closeMenu={closeMenu}>
-                        Item 3
-                      </Item>
+                      <div className="p-2">
+                        <Item
+                          closeMenu={closeMenu}
+                          onSelect={() => setText("Clicked Item 1")}
+                        >
+                          Item 1
+                        </Item>
+                        <Item
+                          closeMenu={closeMenu}
+                          onSelect={() => setText("Clicked Item 2")}
+                        >
+                          Item 2
+                        </Item>
+                        <Item
+                          closeMenu={closeMenu}
+                          onSelect={() => alert(";)")}
+                        >
+                          Item 3
+                        </Item>
+                      </div>
                     </motion.div>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
@@ -75,7 +84,7 @@ export default function App() {
             </AnimatePresence>
           </DropdownMenu.Root>
         </header>
-        <div className="px-6 py-8">
+        <div className="px-6 py-8 text-right">
           <p>{text}</p>
         </div>
       </div>
@@ -83,16 +92,13 @@ export default function App() {
   );
 }
 
-const sleep = (s: number) =>
-  new Promise((resolve) => setTimeout(resolve, s * 1000));
-
 function Item({
   children,
-  onClick = () => {},
+  onSelect = () => {},
   closeMenu,
 }: {
   children: ReactNode;
-  onClick?: () => void;
+  onSelect?: () => void;
   closeMenu: () => void;
 }) {
   let controls = useAnimationControls();
@@ -103,22 +109,29 @@ function Item({
       onSelect={async (e) => {
         e.preventDefault();
         await controls.start({
-          backgroundColor: "var(--white)",
-          color: "var(--gray-700)",
-          transition: { duration: 0.04 },
+          backgroundColor: `${colors.sky[400]}00`,
+          color: colors.gray[700],
+          transition: { duration: 0.05 },
         });
         await controls.start({
-          backgroundColor: "var(--sky-400)",
-          color: "var(--white)",
-          transition: { duration: 0.04 },
+          backgroundColor: colors.sky[400],
+          color: colors.white,
+          transition: { duration: 0.05 },
         });
         await sleep(0.075);
         await closeMenu();
-        onClick();
+        onSelect();
       }}
-      className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded"
     >
-      <motion.div animate={controls}>{children}</motion.div>
+      <motion.div
+        animate={controls}
+        className="w-40 cursor-default select-none rounded px-2 py-1.5 text-gray-700 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none"
+      >
+        {children}
+      </motion.div>
     </DropdownMenu.Item>
   );
 }
+
+const sleep = (s: number) =>
+  new Promise((resolve) => setTimeout(resolve, s * 1000));
