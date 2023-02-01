@@ -1,6 +1,7 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { ReactNode, useEffect, useState } from "react";
+import colors from "tailwindcss/colors";
 
 export default function App() {
   let [text, setText] = useState("Select an item");
@@ -32,7 +33,7 @@ export default function App() {
                 <DropdownMenu.Portal forceMount>
                   <DropdownMenu.Content
                     align="start"
-                    className="bg-white/50 backdrop-blur overflow-hidden rounded text-left shadow mt-1"
+                    className="bg-white/75 backdrop-blur overflow-hidden rounded text-left shadow mt-1"
                     asChild
                   >
                     <motion.div
@@ -104,32 +105,27 @@ function Item({
 
   return (
     <DropdownMenu.Item
+      asChild
       onSelect={async (e) => {
         e.preventDefault();
         await controls.start({
-          backgroundColor: "rgb(56 189 248 / 0)",
-          // backgroundColor: "var(--sky-400) / 0)",
-          // color: "rgb(64 64 64 / 1)",
-          color: "rgb(var(--gray-700) / 1)",
+          backgroundColor: `${colors.sky[400]}00`,
+          color: colors.gray[700],
           transition: { duration: 0.05 },
         });
         await controls.start({
-          backgroundColor: "rgb(56 189 248 / 1)",
-          // backgroundColor: "rgb(var(--sky-400) / 1)",
-          color: "rgb(255 255 255 / 1)",
-          // color: "rgb(var(--white) / 1)",
+          backgroundColor: colors.sky[400],
+          color: colors.white,
           transition: { duration: 0.05 },
         });
         await sleep(0.075);
         await closeMenu();
         onSelect();
       }}
-      asChild
     >
       <motion.div
         animate={controls}
         className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-sky-400 data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded cursor-default"
-        // className="text-gray-700 w-40 px-2 py-1.5 data-[highlighted]:bg-[rgb(var(--sky-400)_/_1)] data-[highlighted]:text-white data-[highlighted]:focus:outline-none select-none rounded cursor-default"
       >
         {children}
       </motion.div>
